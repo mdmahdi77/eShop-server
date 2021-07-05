@@ -24,6 +24,7 @@ client.connect(err => {
     const productCollection = client.db("sShopStore").collection("products");
     const ordersCollection = client.db("sShopStore").collection("orders");
     const reviewCollection = client.db("sShopStore").collection("review");
+    const adminCollection = client.db("sShopStore").collection("admin");
 
     app.post('/addProducts', (req, res) => {
         const product = req.body
@@ -74,6 +75,23 @@ client.connect(err => {
         reviewCollection.find({})
         .toArray((err, document) => {
             res.send(document)
+        })
+    })
+
+    app.post('/addAdmin', (req, res) => {
+        const admin = req.body
+        adminCollection.insert(admin)
+        .then(result => {
+            res.send(result)
+            console.log(result.insertedCount > 0)
+        })
+    })
+
+    app.post('/isAdmin', (req, res) => {
+        const admin = req.body.email
+        adminCollection.find({email: admin})
+        .toArray((err, document) => {
+            res.send(document.length > 0)
         })
     })
 
